@@ -232,22 +232,25 @@ while running:
     if remove and springHeight<SpringMinHeight:
         springHeight += 1
         for i in range (len(playery)):
-            print("active")
             playery[i] -= 1
             
             
     #pushing functionality 
     if falling == True and collision2 == False:
+            #prevent unwanted clicks on the push before the last push is complete 
+            buttonPush_clicked = False 
             playery[number] += 0.2
             
             
     #popping functionality 
     if remove:
+        #prevent unwanted clicks on the pop before the last pop is complete 
+        buttonPop_clicked = False
         if playery[-1]>0:
             playery[-1] -= 0.7
         if playery[-1]<50:
             playerx[-1] -= 0.3
-            playery[-1] -=0.3
+            playery[-1] -=0.3 
         if playerx[-1] <-50:
             remove = False 
             playerx.pop()
@@ -340,5 +343,4 @@ while running:
 
 
     pygame.display.update()
-    
     
