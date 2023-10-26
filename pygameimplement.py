@@ -272,9 +272,13 @@ while running:
     # Handle button actions
     if buttonPush_clicked:
         #prevent people from pushsing stack is empty or if theres no user input
-        if user_text == "Stack is empty" or user_text=='':
+        if user_text == "Stack is empty" or user_text=='' or user_text=='Stack is Full':
             #reset user text
             user_text=''
+            buttonPush_clicked = False 
+        #prevent it from candy overflow
+        elif playery[number]<120:
+            user_text='Stack is Full'
             buttonPush_clicked = False 
         else:
             #reduce spring height for spring compression
