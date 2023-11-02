@@ -35,7 +35,6 @@ Eric  = Stacky()
 
 
 #pygame implementation
-
 pygame.init()
 screen = pygame.display.set_mode((850,600))
 #button constraints
@@ -47,7 +46,6 @@ BUTTON_TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 36
 #buttons 
 font = pygame.font.Font(None, FONT_SIZE)
-
 buttonPush_text = "PUSH"
 buttonPop_text = "POP"
 buttonLen_text = "LEN"
@@ -66,7 +64,9 @@ buttonTop_rect = pygame.Rect(500, 300, BUTTON_WIDTH, BUTTON_HEIGHT)
 
 #define case 
 candyCase = pygame.Rect(100 ,100, 100, 500)
-
+lid = pygame.image.load("./semicircle.png")
+lid = pygame.transform.scale(lid, (100,100))
+rotated_lid = pygame.transform.rotate(lid, 270)
 
 # Initialize button click flags
 buttonPush_clicked = False
@@ -76,7 +76,6 @@ buttonEmpty_clicked = False
 buttonTop_clicked = False
 
 #function to draw the button
-   
 def draw_button(button_rect, text, clicked):
     is_hovered = button_rect.collidepoint(pygame.mouse.get_pos())
 
@@ -104,15 +103,14 @@ color = color_passive
 active = False
 
 
-
-pygame.display.set_caption("Candy Dispenser")
-icon = pygame.image.load("./candy.png")
-pygame.display.set_icon(icon)
+#does not work with elementary os 
+# pygame.display.set_caption("Candy Dispenser")
+# icon = pygame.image.load("./candy.png")
+# pygame.display.set_icon(icon)
 
 
 #players
 #create static Players
-
 springImg= pygame.image.load("./spring.png")
 SpringMinHeight = 100
 springHeight = 100
@@ -139,7 +137,7 @@ playery.append(springy)
 number = 0
 
     
-
+#function to determine collisions
 def isCollision(x1,y1,x2,y2):
     distance = math.sqrt((math.pow(x2-x1,2))+(math.pow(y2-y1,2)))
     if distance < 45:
@@ -147,7 +145,7 @@ def isCollision(x1,y1,x2,y2):
     else:
         return False
     
-
+#initialise cotrollers for candy movement
 falling = False 
 remove = False
 
@@ -200,7 +198,8 @@ while running:
     input_rect.w = max(100,text_surface.get_width() + 10)
     
     #draw the candy case 
-    pygame.draw.rect(screen,(0,0,0),candyCase,5)      
+    pygame.draw.rect(screen,(0,0,0),candyCase,5)   
+ 
     
     #players implement 
     #rescale the spring 
@@ -225,6 +224,7 @@ while running:
     #compress spring
     if collision2 and springHeight>SpringMinHeight and playery[0]>springpos:
         springHeight -= 1
+        #lower the other candies in the stack as well
         for i in range (len(playery)):
             playery[i] += 1
         
@@ -239,8 +239,12 @@ while running:
     if falling == True and collision2 == False:
             #prevent unwanted clicks on the push before the last push is complete 
             buttonPush_clicked = False 
+            #perform the falling functionality 
             playery[number] += 0.2
             
+    #reset the falling attribute to enable the lid to close        
+    if collision2 == True:
+        falling = False        
             
     #popping functionality 
     if remove:
@@ -259,8 +263,22 @@ while running:
             ImgText.pop()
             number -=1
             user_text = ''
-            
-                      
+    
+    #lid functionality     
+    if falling:
+        screen.blit(rotated_lid,(170,10))
+    elif remove:
+        screen.blit(rotated_lid,(170,10))
+    else:
+        screen.blit(lid,(100,24))            
+    # if falling or remove:
+    #     if collision2 == False:
+    #         screen.blit(rotated_lid,(170,10))
+    # elif collision2 == True:
+    #     screen.blit(lid,(100,24))
+    # else:
+    #     screen.blit(lid,(100,24))
+        
     
     # Draw buttons
     draw_button(buttonPush_rect, buttonPush_text, buttonPush_clicked)
